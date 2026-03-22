@@ -16,6 +16,7 @@ prytty-syntax = { workspace = true }
 prytty-formats = { workspace = true }
 clap = { version = "4", features = ["derive"] }
 is-terminal = "0.4"
+terminal_size = "0.4"
 
 [dev-dependencies]
 assert_cmd = "2"

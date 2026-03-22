@@ -1,7 +1,7 @@
 use clap::Parser;
 use is_terminal::IsTerminal;
 use prytty_core::{detect_language, strip_ansi, AnsiWriter, ColorMode, Language};
-use prytty_formats::format_json;
+use prytty_formats::{format_diff_side_by_side, format_json};
 use prytty_syntax::tokenize;
 use std::io::{self, BufRead, Read, Write};
 use std::path::PathBuf;
@@ -29,6 +29,14 @@ struct Cli {
     /// Format/pretty-print structured data (JSON)
     #[arg(short, long)]
     format: bool,
+
+    /// Side-by-side diff view with word-level highlighting
+    #[arg(short = 'S', long)]
+    side_by_side: bool,
+
+    /// Terminal width override (auto-detected if omitted)
+    #[arg(short = 'W', long)]
+    width: Option<u16>,
 
     /// Stream mode: highlight line-by-line without buffering all input.
     /// Ideal for `tail -f | prytty --stream` or long-running pipes.
@@ -124,6 +132,20 @@ fn run_batch(cli: &Cli, color_mode: ColorMode) {
         .as_deref()
         .and_then(Language::from_name)
         .unwrap_or_else(|| detect_language(cli.file.as_deref(), &input));
+
+    // Side-by-side diff mode
+    if cli.side_by_side && lang == Language::Diff {
+        let term_width = cli.width.unwrap_or_else(|| {
+            terminal_size::terminal_size()
+                .map(|(w, _)| w.0)
+                .unwrap_or(120)
+        });
+        let output = format_diff_side_by_side(&input, term_width, color_mode);
+        let stdout = io::stdout();
+        let mut out = stdout.lock();
+        let _ = out.write_all(output.as_bytes());
+        return;
+    }
 
     let input = if cli.format && lang == Language::Json {
         format_json(&input)
