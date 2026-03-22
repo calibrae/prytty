@@ -5,6 +5,7 @@ members = [
     "prytty-syntax",
     "prytty-formats",
     "prytty-cli",
+    "prytty-wasm",
 ]
 
 [workspace.package]
