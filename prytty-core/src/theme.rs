@@ -175,6 +175,163 @@ mod tests {
 }
 
 impl Theme {
+    /// Look up a theme by name. Returns default (dark+) for unknown names.
+    pub fn by_name(name: &str) -> Self {
+        match name.to_ascii_lowercase().as_str() {
+            "solarized" | "solarized-dark" => Self::solarized_dark(),
+            "monokai" => Self::monokai(),
+            "catppuccin" | "catppuccin-mocha" => Self::catppuccin_mocha(),
+            "nord" => Self::nord(),
+            "dracula" => Self::dracula(),
+            _ => Self::default(),
+        }
+    }
+
+    /// Solarized Dark — Ethan Schoonover's classic.
+    /// Base03 (#002b36) background assumed.
+    pub fn solarized_dark() -> Self {
+        // Solarized accent colors
+        let yellow  = (181, 137, 0);    // #b58900
+        let orange  = (203, 75, 22);    // #cb4b16
+        let red     = (220, 50, 47);    // #dc322f
+        let magenta = (211, 54, 130);   // #d33682
+        let violet  = (108, 113, 196);  // #6c71c4
+        let blue    = (38, 139, 210);   // #268bd2
+        let cyan    = (42, 161, 152);   // #2aa198
+        let green   = (133, 153, 0);    // #859900
+
+        // Solarized content tones
+        let base0  = (131, 148, 150);   // #839496 — body text
+        let base01 = (88, 110, 117);    // #586e75 — comments
+
+        Self {
+            keyword: Style::new(green.0, green.1, green.2).bold(),
+            type_: Style::new(yellow.0, yellow.1, yellow.2),
+            function: Style::new(blue.0, blue.1, blue.2),
+            string: Style::new(cyan.0, cyan.1, cyan.2),
+            number: Style::new(magenta.0, magenta.1, magenta.2),
+            comment: Style::new(base01.0, base01.1, base01.2).italic(),
+            operator: Style::new(base0.0, base0.1, base0.2),
+            punctuation: Style::new(base01.0, base01.1, base01.2),
+            variable: Style::new(blue.0, blue.1, blue.2),
+            constant: Style::new(violet.0, violet.1, violet.2),
+            attribute: Style::new(orange.0, orange.1, orange.2),
+            builtin: Style::new(red.0, red.1, red.2),
+            label: Style::new(orange.0, orange.1, orange.2).bold(),
+            key: Style::new(blue.0, blue.1, blue.2),
+            escape: Style::new(orange.0, orange.1, orange.2),
+            url: Style::new(violet.0, violet.1, violet.2).italic(),
+            path: Style::new(cyan.0, cyan.1, cyan.2),
+            ip: Style::new(magenta.0, magenta.1, magenta.2),
+            timestamp: Style::new(base01.0, base01.1, base01.2),
+            plain: Style::new(base0.0, base0.1, base0.2),
+        }
+    }
+
+    /// Monokai — the Sublime Text classic.
+    pub fn monokai() -> Self {
+        Self {
+            keyword: Style::new(249, 38, 114).bold(),     // pink
+            type_: Style::new(102, 217, 239),              // cyan
+            function: Style::new(166, 226, 46),            // green
+            string: Style::new(230, 219, 116),             // yellow
+            number: Style::new(174, 129, 255),             // purple
+            comment: Style::new(117, 113, 94).italic(),    // gray
+            operator: Style::new(249, 38, 114),            // pink
+            punctuation: Style::new(248, 248, 242),        // white
+            variable: Style::new(248, 248, 242),           // white
+            constant: Style::new(174, 129, 255),           // purple
+            attribute: Style::new(166, 226, 46),           // green
+            builtin: Style::new(102, 217, 239),            // cyan
+            label: Style::new(230, 219, 116).bold(),       // yellow
+            key: Style::new(249, 38, 114),                 // pink
+            escape: Style::new(174, 129, 255),             // purple
+            url: Style::new(102, 217, 239).italic(),       // cyan
+            path: Style::new(166, 226, 46),                // green
+            ip: Style::new(174, 129, 255),                 // purple
+            timestamp: Style::new(117, 113, 94),           // gray
+            plain: Style::new(248, 248, 242),              // white
+        }
+    }
+
+    /// Catppuccin Mocha — the pastel dark theme.
+    pub fn catppuccin_mocha() -> Self {
+        Self {
+            keyword: Style::new(203, 166, 247).bold(),    // mauve
+            type_: Style::new(250, 179, 135),              // peach
+            function: Style::new(137, 180, 250),           // blue
+            string: Style::new(166, 227, 161),             // green
+            number: Style::new(250, 179, 135),             // peach
+            comment: Style::new(108, 112, 134).italic(),   // overlay0
+            operator: Style::new(205, 214, 244),           // text
+            punctuation: Style::new(147, 153, 178),        // overlay2
+            variable: Style::new(205, 214, 244),           // text
+            constant: Style::new(250, 179, 135),           // peach
+            attribute: Style::new(249, 226, 175),          // yellow
+            builtin: Style::new(245, 194, 231),            // pink
+            label: Style::new(249, 226, 175).bold(),       // yellow
+            key: Style::new(137, 180, 250),                // blue
+            escape: Style::new(245, 194, 231),             // pink
+            url: Style::new(116, 199, 236).italic(),       // sapphire
+            path: Style::new(148, 226, 213),               // teal
+            ip: Style::new(166, 227, 161),                 // green
+            timestamp: Style::new(108, 112, 134),          // overlay0
+            plain: Style::new(205, 214, 244),              // text
+        }
+    }
+
+    /// Nord — the Arctic color palette.
+    pub fn nord() -> Self {
+        Self {
+            keyword: Style::new(129, 161, 193).bold(),    // nord9
+            type_: Style::new(143, 188, 187),              // nord7
+            function: Style::new(136, 192, 208),           // nord8
+            string: Style::new(163, 190, 140),             // nord14
+            number: Style::new(180, 142, 173),             // nord15
+            comment: Style::new(76, 86, 106).italic(),     // nord3
+            operator: Style::new(216, 222, 233),           // nord4
+            punctuation: Style::new(76, 86, 106),          // nord3
+            variable: Style::new(216, 222, 233),           // nord4
+            constant: Style::new(180, 142, 173),           // nord15
+            attribute: Style::new(235, 203, 139),          // nord13
+            builtin: Style::new(143, 188, 187),            // nord7
+            label: Style::new(235, 203, 139).bold(),       // nord13
+            key: Style::new(129, 161, 193),                // nord9
+            escape: Style::new(208, 135, 112),             // nord12
+            url: Style::new(136, 192, 208).italic(),       // nord8
+            path: Style::new(163, 190, 140),               // nord14
+            ip: Style::new(143, 188, 187),                 // nord7
+            timestamp: Style::new(76, 86, 106),            // nord3
+            plain: Style::new(216, 222, 233),              // nord4
+        }
+    }
+
+    /// Dracula — the dark theme for vampires.
+    pub fn dracula() -> Self {
+        Self {
+            keyword: Style::new(255, 121, 198).bold(),    // pink
+            type_: Style::new(139, 233, 253),              // cyan
+            function: Style::new(80, 250, 123),            // green
+            string: Style::new(241, 250, 140),             // yellow
+            number: Style::new(189, 147, 249),             // purple
+            comment: Style::new(98, 114, 164).italic(),    // comment
+            operator: Style::new(255, 121, 198),           // pink
+            punctuation: Style::new(248, 248, 242),        // foreground
+            variable: Style::new(248, 248, 242),           // foreground
+            constant: Style::new(189, 147, 249),           // purple
+            attribute: Style::new(80, 250, 123),           // green
+            builtin: Style::new(139, 233, 253),            // cyan
+            label: Style::new(241, 250, 140).bold(),       // yellow
+            key: Style::new(139, 233, 253),                // cyan
+            escape: Style::new(255, 184, 108),             // orange
+            url: Style::new(139, 233, 253).italic(),       // cyan
+            path: Style::new(80, 250, 123),                // green
+            ip: Style::new(189, 147, 249),                 // purple
+            timestamp: Style::new(98, 114, 164),           // comment
+            plain: Style::new(248, 248, 242),              // foreground
+        }
+    }
+
     pub fn style_for(&self, kind: TokenKind) -> Style {
         match kind {
             TokenKind::Keyword => self.keyword,

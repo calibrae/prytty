@@ -1,6 +1,6 @@
 use clap::Parser;
 use is_terminal::IsTerminal;
-use prytty_core::{detect_language, strip_ansi, AnsiWriter, ColorMode, Language};
+use prytty_core::{detect_language, strip_ansi, AnsiWriter, ColorMode, Language, Theme};
 use prytty_formats::{format_diff_side_by_side, format_json};
 use prytty_syntax::tokenize;
 use std::io::{self, BufRead, Read, Write};
@@ -154,7 +154,7 @@ fn run_batch(cli: &Cli, color_mode: ColorMode) {
     };
 
     let tokens = tokenize(lang, &input);
-    let writer = AnsiWriter::new(color_mode, Default::default());
+    let writer = AnsiWriter::new(color_mode, Theme::by_name(&cli.theme));
     let output = writer.render(&tokens);
 
     let stdout = io::stdout();
@@ -167,7 +167,7 @@ fn run_stream(cli: &Cli, color_mode: ColorMode) {
     let reader = stdin.lock();
     let stdout = io::stdout();
     let mut out = stdout.lock();
-    let writer = AnsiWriter::new(color_mode, Default::default());
+    let writer = AnsiWriter::new(color_mode, Theme::by_name(&cli.theme));
     let sanitize = !cli.no_sanitize;
 
     // If language is specified, skip detection and stream immediately
