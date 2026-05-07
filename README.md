@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/logo.png" alt="prytty" width="180"/></p>
+
 # Prytty
 
 Syntax highlighting and pretty-printing for terminal output. 475KB binary, zero heavy dependencies.
